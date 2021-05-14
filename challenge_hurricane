@@ -1,7 +1,7 @@
 # names of hurricanes
 #from typing import ValuesView
 
-
+#Hurricane names
 names = ['Cuba I', 'San Felipe II Okeechobee', 'Bahamas', 'Cuba II', 'CubaBrownsville', 'Tampico', 'Labor Day', 'New England', 'Carol', 'Janet', 'Carla', 'Hattie', 'Beulah', 'Camille', 'Edith', 'Anita', 'David', 'Allen', 'Gilbert', 'Hugo', 'Andrew', 'Mitch', 'Isabel', 'Ivan', 'Emily', 'Katrina', 'Rita', 'Wilma', 'Dean', 'Felix', 'Matthew', 'Irma', 'Maria', 'Michael']
 
 # months of hurricanes
@@ -27,10 +27,16 @@ damages = ['Damages not recorded', '100M', 'Damages not recorded', '40M',
 deaths = [90,4000,16,3103,179,184,408,682,5,1023,43,319,688,259,37,11,2068,269,318,107,65,19325,51,124,17,1836,125,87,45,133,603,138,3057,74]
 
 # write your update damages function here:
+# this function converts the damages values to floats using the millions/billions conversions in the conversion dictionary
+#if there is no damage recorded the entry is unchanged
+
 conversion = {"M": 1000000,
               "B": 1000000000}
+              
 def damages_to_float(damages):
+    #initialising a new list
     float_damages = []
+    #iterating through the listand determining if its million (M) or billion (B)
     for value in damages:
         if value[-1] == "M":
             float_damages.append(float(value[:-1])*conversion["M"])
@@ -44,11 +50,18 @@ def damages_to_float(damages):
 #print(len(names), len(months), len(years), len(max_sustained_winds), len(areas_affected), len(deaths))
 
 
+#the data in each list above is organized such that the data at each index, from 0 to 33, corresponds to the same hurricane.
+#challenge: Write a function that constructs a dictionary made out of the lists, where the keys of the dictionary are the names of the hurricanes, 
+#and the values are dictionaries themselves containing a key for each piece of data
+
 def hurricane_info(names, months, years, max_sustained_winds, areas_affected, damages, deaths):
+    #initialising my dictionary 
     hurricanes = {}
+    #checking that all the lists are the same length 
     if len(names)==len(months)==len(years)==len(max_sustained_winds)==len(areas_affected)==len(damages)==len(deaths):
-        
+        #iterating through the list
         for i in range(len(names)):
+        #populating the dictionary for each hurricane
             hurricanes[names[i]] = {"Name": names[i], "Month": months[i],
             "Year": years[i], "Max Sustained Wind": max_sustained_winds[i], 
             "Areas Affected": areas_affected[i],
@@ -56,16 +69,18 @@ def hurricane_info(names, months, years, max_sustained_winds, areas_affected, da
     return hurricanes
 
 hurricanes = (hurricane_info(names, months, years, max_sustained_winds, areas_affected, damages, deaths))
-print(hurricanes["Cuba I"]["Year"])
+#print(hurricanes["Cuba I"]["Year"])
 
-# write your construct hurricane by year dictionary function here:
+
+#Challenge: Write a function that converts the current dictionary of hurricanes to a new dictionary, 
+where the keys are years and the values are lists containing a dictionary for each hurricane that occurred in that year.
+
 def hurricane_by_year(hurricane_by_name_dict):
     hurricane_by_year_dict = {}
     for location in hurricane_by_name_dict:
         year = hurricane_by_name_dict[location]["Year"]
         current_cane = hurricane_by_name_dict[location]
         if year not in hurricane_by_year_dict:
-
             hurricane_by_year_dict[year] = [current_cane]
         else:
             locations = hurricane_by_year_dict[year]
@@ -81,7 +96,10 @@ def hurricane_by_year(hurricane_by_name_dict):
 by_year = hurricane_by_year(hurricanes)
 print(by_year[1932])
 
-# write your count affected areas function here:
+# Challenge: Write a function that counts how often each area is listed as an affected area of a hurricane. 
+#Store and return the results in a dictionary where the keys are the affected areas and the values are counts 
+#of how many times the areas were affected.
+
 def area_affected_count(dict_of_hurricanes):
     hurricane_by_area_dict = {}
     for location in dict_of_hurricanes:
@@ -95,12 +113,13 @@ def area_affected_count(dict_of_hurricanes):
             else:
                 count = hurricane_by_area_dict[area] + 1
                 hurricane_by_area_dict[area]= count
-                
-
     return hurricane_by_area_dict
+    
 areas_count = area_affected_count(hurricanes)
 print(" the areas affected dictionary: {areas_count}".format(areas_count=areas_count))
 
+
+#Write a function that finds the area affected by the most hurricanes, and how often it was hit.
 def most_affected_area(dict_of_hurricanes):
     areas_count = area_affected_count(dict_of_hurricanes)
     max_count = 0
@@ -113,7 +132,8 @@ def most_affected_area(dict_of_hurricanes):
 
 print(most_affected_area(hurricanes))
 
-# write your greatest number of deaths function here:
+
+#Write a function that finds the hurricane that caused the greatest number of deaths, and how many deaths it caused.
 def most_deaths(dict_of_hurricanes):
     max_deaths = 0
     max_name = ""
@@ -126,7 +146,9 @@ def most_deaths(dict_of_hurricanes):
 
 print(most_deaths(hurricanes))
 
-# write your catgeorize by mortality function here:
+#Just as hurricanes are rated by their windspeed, you want to try rating hurricanes based on other metrics.
+#Write a function that rates hurricanes on a mortality scale according to the following ratings, 
+#where the key is the rating and the value is the upper bound of deaths for that rating.
 mortality_scale = {0: 0,
                    1: 100,
                    2: 500,
@@ -154,6 +176,8 @@ def cat_by_mortality_scale(dict_of_hurricanes):
 
 print(cat_by_mortality_scale(hurricanes))
 
+
+#Write a function that finds the hurricane that caused the greatest damage, and how costly it was.
 def hurricane_that_caused_most_damage(dict_of_hurricanes):
     names = []
     damages = []
@@ -181,6 +205,11 @@ damage_scale = {0: 0,
                 2: 1000000000,
                 3: 10000000000,
                 4: 50000000000}
+
+
+#Lastly, you want to rate hurricanes according to how much damage they cause.
+#Write a function that rates hurricanes on a damage scale according to the following ratings, 
+#where the key is the rating and the value is the upper bound of damage for that rating.
 
 def cat_by_damage(dict_of_hurricanes):
     damage_cat = {0:[], 1:[], 2:[], 3:[], 4:[], 5:[]}
